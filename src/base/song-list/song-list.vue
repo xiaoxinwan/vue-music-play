@@ -1,7 +1,8 @@
 <template>
     <div class="song-list">
         <ul>
-            <li v-for="song in songs"
+            <li @click="selectItem(song, index)"
+                v-for="(song,index) in songs"
                 :key="song.id"
                 class="item">
                 <div class="content">
@@ -25,6 +26,9 @@
         methods: {
             getDesc(song) {
                 return `${song.singer}-${song.album}`
+            },
+            selectItem(item, index) {
+                this.$emit('select', item, index)
             }
         }
     }
@@ -41,13 +45,16 @@
             box-sizing border-box
             height 64px
             font-size $font-size-medium
+
             .content
                 flex 1
                 line-height 20px
                 overflow hidden
+
                 .name
                     no-wrap()
                     color $color-text
+
                 .desc
                     no-wrap()
                     margin-top 4px

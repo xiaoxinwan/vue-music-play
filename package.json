@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "better-scroll": "^1.15.0",
+    "create-keyframe-animation": "^0.1.0",
     "fastclick": "^1.0.6",
     "gtop": "^1.0.0",
     "jsonp": "^0.2.1",
