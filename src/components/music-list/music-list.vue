@@ -41,6 +41,7 @@
     import Loading from '../../base/loading/loading'
     import {prefixStyle} from "../../assets/js/dom";
     import {mapActions} from 'vuex'
+    import {playlistMixin} from "../../assets/js/mixin";
 
 
     const RESEVERD_HEIGHT = 40
@@ -48,6 +49,7 @@
     const backdrop = prefixStyle('backdrop-filter')
     export default {
         name: "music-list",
+        mixins: [playlistMixin],
         components: {
             Scroll,
             SongList,
@@ -133,6 +135,11 @@
               this.randomPlay({
                   list: this.songs
               })
+            },
+            handlePlaylist(playlist) {
+                const bottom = playlist.length>0 ? '60px' : ''
+                this.$refs.list.$el.style.bottom = bottom
+                this.$refs.list.refresh()
             },
             ...mapActions([
                 'selectPlay',
