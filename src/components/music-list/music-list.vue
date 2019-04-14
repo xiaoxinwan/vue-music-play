@@ -10,6 +10,7 @@
             <div class="play-wrapper">
                 <div class="play"
                      v-show="songs.length>0"
+                     @click="random"
                      ref="playBtn">
                     <i class="icon-play"></i>
                     <span class="text">随机播放全部</span>
@@ -128,8 +129,14 @@
                     index
                 })
             },
+            random() {
+              this.randomPlay({
+                  list: this.songs
+              })
+            },
             ...mapActions([
-                'selectPlay'
+                'selectPlay',
+                'randomPlay'
             ])
         }
 
