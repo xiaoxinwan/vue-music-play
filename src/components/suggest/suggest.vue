@@ -19,7 +19,9 @@
             </li>
             <loading v-show="hasMore"></loading>
         </ul>
-
+        <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+            <no-result title="抱歉，没找到相关歌曲！"></no-result>
+        </div>
     </scroll>
 </template>
 
@@ -31,13 +33,14 @@
     import Loading from '../../base/loading/loading'
     import {mapMutations, mapActions} from 'vuex'
     import Singer from "../../assets/js/singer";
+    import NoResult from '../../base/no-result/no-result'
 
     const TYPE_SINGER = 'singer'
     const PERPAGE = 20
 
     export default {
         name: "suggest",
-        components: {Scroll, Loading},
+        components: {Scroll, Loading, NoResult},
         props: {
             query: {
                 type: String,

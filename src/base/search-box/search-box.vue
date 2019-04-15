@@ -13,9 +13,11 @@
 </template>
 
 <script>
+    import {debounce} from "../../assets/js/util";
+
     export default {
         name: "search-box",
-        data(){
+        data() {
             return {
                 query: ''
             }
@@ -31,13 +33,13 @@
                 this.query = ''
             },
             setQuery(query) {
-                this.query =query
+                this.query = query
             }
         },
         created() {
-            this.$watch('query', (newQuery) => {
+            this.$watch('query', debounce((newQuery) => {
                 this.$emit('query', newQuery)
-            })
+            }), 200)
         }
     }
 </script>
@@ -54,9 +56,11 @@
         height 40px
         background $color-highlight-background
         border-radius 6px
+
         .icon-search
             font-size 24px
             color $color-background
+
         .box
             flex 1
             margin 0 5px
@@ -64,8 +68,10 @@
             background $color-highlight-background
             color $color-text
             font-size $font-size-medium
+
             &::placeholder
                 color $color-text-d
+
         .icon-dismiss
             font-size 16px
             color $color-background
