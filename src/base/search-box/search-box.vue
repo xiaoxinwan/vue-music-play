@@ -4,6 +4,7 @@
         <input class="box"
                :placeholder="placeholder"
                v-model="query"
+               ref="query"
         />
         <i class="icon-dismiss"
            v-show="query"
@@ -34,12 +35,15 @@
             },
             setQuery(query) {
                 this.query = query
+            },
+            blur(){
+                this.$refs.query.blur()
             }
         },
         created() {
             this.$watch('query', debounce((newQuery) => {
                 this.$emit('query', newQuery)
-            }), 200)
+            }, 200))
         }
     }
 </script>
@@ -64,6 +68,7 @@
         .box
             flex 1
             margin 0 5px
+            padding 5px
             line-height 18px
             background $color-highlight-background
             color $color-text

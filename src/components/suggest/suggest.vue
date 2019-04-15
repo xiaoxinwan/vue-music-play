@@ -2,6 +2,8 @@
     <scroll class="suggest"
             :data="result"
             :pull-up="pullUp"
+            :before-scroll="beforeScroll"
+            @beforeScroll="listScroll"
             @scrollToEnd="searchMore"
             ref="suggest"
     >
@@ -56,6 +58,7 @@
                 page: 1,
                 result: [],
                 pullUp: true,
+                beforeScroll: true,
                 hasMore: true
             }
         },
@@ -110,6 +113,9 @@
                 } else {
                     return `${item.name}-${item.singer}`
                 }
+            },
+            listScroll() {
+                this.$emit('listScroll')
             },
             _checkMore(data) {
                 const song = data.song
