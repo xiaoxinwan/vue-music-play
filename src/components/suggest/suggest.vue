@@ -1,8 +1,14 @@
 <template>
-    <scroll class="suggest" :data="result">
+    <scroll class="suggest"
+            :data="result"
+            :pull-up="pullUp"
+            @scrollToEnd="searchMore"
+            ref="suggest"
+    >
         <ul class="suggest-list">
             <li class="suggest-item"
                 v-for="item in result"
+                @click="selectItem(item)"
             >
                 <div class="icon">
                     <i :class="getIconCls(item)"></i>
@@ -11,6 +17,7 @@
                     <p class="text" v-html="getDisplayName(item)"></p>
                 </div>
             </li>
+            <loading v-show="hasMore"></loading>
         </ul>
 
     </scroll>
@@ -21,11 +28,16 @@
     import {ERR_OK} from "../../api/config";
     import {createSong} from '../../assets/js/song'
     import Scroll from "../../base/scroll/scroll";
+    import Loading from '../../base/loading/loading'
+    import {mapMutations, mapActions} from 'vuex'
+    import Singer from "../../assets/js/singer";
 
     const TYPE_SINGER = 'singer'
+    const PERPAGE = 20
+
     export default {
         name: "suggest",
-        components: {Scroll},
+        components: {Scroll, Loading},
         props: {
             query: {
                 type: String,
@@ -39,14 +51,46 @@
         data() {
             return {
                 page: 1,
-                result: []
+                result: [],
+                pullUp: true,
+                hasMore: true
             }
         },
         methods: {
+            selectItem(item){
+                if(item.type === TYPE_SINGER) {
+                    const singer = new Singer({
+                        id: item.singermid,
+                        name: item.singername
+                    })
+                    this.$router.push({
+                        path: `/search/${singer.id}`
+                    })
+                    this.setSinger(singer)
+                }else{
+                    this.insertSong(item)
+                }
+            },
             search() {
-                search(this.query, this.page, this.showSinger).then((res) => {
+                this.hasMore = true
+                this.page = 1
+                this.$refs.suggest.scrollTo(0, 0)
+                search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
                     if (res.code === ERR_OK) {
                         this.result = this._getResult(res.data)
+                        this._checkMore(res.data)
+                    }
+                })
+            },
+            searchMore() {
+                if (!this.hasMore) {
+                    return
+                }
+                this.page++
+                search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
+                    if (res.code === ERR_OK) {
+                        this.result = this.result.concat(this._getResult(res.data))
+                        this._checkMore(res.data)
                     }
                 })
             },
@@ -62,6 +106,12 @@
                     return item.singername
                 } else {
                     return `${item.name}-${item.singer}`
+                }
+            },
+            _checkMore(data) {
+                const song = data.song
+                if (!song.list.length || (song.curnum + song.curpage * PERPAGE) > song.totalnum) {
+                    this.hasMore = false
                 }
             },
             _getResult(data) {
@@ -82,7 +132,13 @@
                     }
                 })
                 return ret
-            }
+            },
+            ...mapMutations({
+                setSinger: 'SET_SINGER'
+            }),
+            ...mapActions([
+                'insertSong'
+            ])
         },
         watch: {
             query() {
