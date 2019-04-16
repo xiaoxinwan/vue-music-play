@@ -115,6 +115,9 @@
                     return `${item.name}-${item.singer}`
                 }
             },
+            refresh(){
+                this.$refs.suggest.refresh()
+            },
             listScroll() {
                 this.$emit('listScroll')
             },
