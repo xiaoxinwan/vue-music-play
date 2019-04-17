@@ -35,6 +35,7 @@
                             v-if="currentIndex === 1"
                             :data="searchHistory"
                             ref="searchList"
+                            :refresh-delay="refreshDelay"
                     >
                         <div class="list-inner">
                             <search-list :searches="searchHistory"
@@ -52,6 +53,12 @@
                          @listScroll="blurInput"
                 ></suggest>
             </div>
+            <top-tip ref="topTip">
+                <div class="tip-title">
+                    <i class="icon-ok"></i>
+                    <span class="text">已添加到播放列表！</span>
+                </div>
+            </top-tip>
         </div>
     </transition>
 </template>
@@ -63,6 +70,7 @@
     import Scroll from '../../base/scroll/scroll'
     import SongList from '../../base/song-list/song-list'
     import SearchList from '../../base/search-list/search-list'
+    import TopTip from '../../base/top-tip/top-tip'
     import Song from '../../assets/js/song'
     import {searchMixin} from "../../assets/js/mixin"
     import {mapGetters, mapActions} from 'vuex'
@@ -76,7 +84,8 @@
             Switches,
             Scroll,
             SongList,
-            SearchList
+            SearchList,
+            TopTip
         },
         data() {
             return {
@@ -91,7 +100,8 @@
                     }
                 ],
                 currentIndex: 0,
-                rank: false
+                rank: false,
+
             }
         },
         computed: {
@@ -116,6 +126,7 @@
             },
             selectSuggest() {
                 this.saveSearch()
+                this.showTip()
             },
             switchItem(index) {
                 this.currentIndex = index
@@ -123,7 +134,11 @@
             selectSong(song, index) {
                 if (index !== 0) {
                     this.insertSong(new Song(song))
+                    this.showTip()
                 }
+            },
+            showTip(){
+                this.$refs.topTip.show()
             },
             ...mapActions([
                 'insertSong'
