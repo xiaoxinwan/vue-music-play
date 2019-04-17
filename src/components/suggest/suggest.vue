@@ -11,7 +11,7 @@
             <li class="suggest-item"
                 v-for="item in result"
                 @click="selectItem(item)"
-                :key="item"
+                :key="item.name"
             >
                 <div class="icon">
                     <i :class="getIconCls(item)"></i>
