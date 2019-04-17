@@ -112,7 +112,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapGetters, mapMutations, mapActions} from 'vuex'
     import animations from 'create-keyframe-animation'
     import {prefixStyle} from "../../assets/js/dom"
     import ProgressBar from '../../base/progress-bar/progress-bar'
@@ -255,6 +255,7 @@
             },
             ready() {
                 this.songReady = true
+                this.savePlayHistory(this.currentSong)
             },
             error() {
             },
@@ -388,11 +389,14 @@
             },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
-            })
+            }),
+            ...mapActions([
+                'savePlayHistory'
+            ])
         },
         watch: {
             currentSong(newSong, oldSong) {
-                if(!newSong.id) {
+                if (!newSong.id) {
                     return
                 }
                 if (newSong.id === oldSong.id) {
