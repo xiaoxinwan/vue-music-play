@@ -8,6 +8,9 @@ app.use('/api', apiRoute)
 
 
 module.exports = {
+    publicPath: process.env.NODE_ENV === 'production'
+        ? '/vue-music-play/'
+        : '/',
     configureWebpack: {
         resolve: {
             alias: {
@@ -52,11 +55,11 @@ module.exports = {
                         }
                     }
                     res.json(ret)
-                }).catch((e)=> {
+                }).catch((e) => {
                     console.log(e)
                 })
             })
-            app.get('/api/getSongList', function(req, res) {
+            app.get('/api/getSongList', function (req, res) {
                 var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
                 axios.get(url, {
                     headers: {
@@ -70,7 +73,7 @@ module.exports = {
                     console.log(e)
                 })
             })
-            app.get('/api/getTopList', function(req, res) {
+            app.get('/api/getTopList', function (req, res) {
                 var url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'
                 axios.get(url, {
                     headers: {
@@ -84,7 +87,7 @@ module.exports = {
                     console.log(e)
                 })
             })
-            app.get('/api/getMusicList', function(req, res) {
+            app.get('/api/getMusicList', function (req, res) {
                 var url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg'
                 axios.get(url, {
                     headers: {
@@ -98,7 +101,7 @@ module.exports = {
                     console.log(e)
                 })
             })
-            app.get('/api/search', function(req, res) {
+            app.get('/api/search', function (req, res) {
                 var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
                 axios.get(url, {
                     headers: {
