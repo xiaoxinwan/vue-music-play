@@ -53,7 +53,7 @@
         methods: {
             selectItem(list){
                 this.$router.push({
-                    path: '/rank/${list.id}'
+                    path: `/rank/${list.id}`
                 })
                 this.setTopList(list)
             },
