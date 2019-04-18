@@ -75,7 +75,10 @@
                             <i @click="next" class="icon-next"></i>
                         </div>
                         <div class="icon i-right">
-                            <i class="icon icon-not-favorite"></i>
+                            <i class="icon"
+                               :class="getFavoriteIcon(currentSong)"
+                               @click="toggleFavorite(currentSong)"
+                            ></i>
                         </div>
                     </div>
                 </div>
@@ -363,7 +366,6 @@
                 this.$refs.middleL.style.opacity = opacity
                 this.$refs.middleL.style[transitionDuration] = `${time}ms`
             },
-
             _pad(num, n = 2) {
                 let len = num.toString().length
                 while (len < n) {
@@ -391,7 +393,9 @@
                 setFullScreen: 'SET_FULL_SCREEN',
             }),
             ...mapActions([
-                'savePlayHistory'
+                'savePlayHistory',
+                'saveFavoriteList',
+                'deleteFavoriteList'
             ])
         },
         watch: {
@@ -626,6 +630,9 @@
 
                     .i-right
                         text-align left
+
+                    .icon-favorite
+                        color $color-sub-theme
 
             &.normal-enter-active, &.normal-leave-active
                 transition all .4s
